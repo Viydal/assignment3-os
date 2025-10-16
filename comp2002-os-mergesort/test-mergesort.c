@@ -106,7 +106,7 @@ void printA(void) {
     printf("Array A:");
     /* FIXME: we assume the size of A is at least 100, and this will fail if it
      * is lower than 100 */
-    for (i = 0; i < 100; i++) {
+    for (i = 0; i < 8; i++) {
         printf(" %d", A[i]);
     }
     printf("\n");
@@ -118,7 +118,7 @@ void printB(void) {
     printf("Array B:");
     /* FIXME: we assume the size of B is at least 100, and this will fail if it
      * is lower than 100 */
-    for (i = 0; i < 100; i++) {
+    for (i = 0; i < 8; i++) {
         printf(" %d", B[i]);
     }
     printf("\n");
@@ -148,17 +148,20 @@ int main(int argc, char **argv) {
     double start_time;
     double sorting_time;
 
+	    printA();
+
     // sort the input (and time it)
     start_time = getMilliSeconds();
     /* first index is 0, last index is n-1, we consider the main thread as level
      * 0 */
     struct argument *arg = buildArgs(0, n - 1, 0);
-    parallel_mergesort(arg);
+    // parallel_mergesort(arg);
+	my_mergesort(arg->left, arg->right);
     sorting_time = getMilliSeconds() - start_time;
 
     // print the array, for debugging purpose.
-    // printA();
-    // printB();
+    printA();
+    printB();
     // print results if correctly sorted otherwise cry foul and exit
     if (check_if_sorted(A, n)) {
         printf("Sorting %d elements took %4.2lf seconds.\n", n,

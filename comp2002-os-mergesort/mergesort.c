@@ -51,7 +51,37 @@ void my_mergesort(int left, int right){
 
 /* this function will be called by the testing program. */
 void * parallel_mergesort(void *arg){
-		return NULL;
+    struct argument *args = (struct argument *) arg;
+    int left = args->left;
+    int right = args->right;
+    int level = args->level;
+
+    if (left < right) {
+        if (level < cutoff) {
+            // we can still create more threads
+            int mid = (left + right) / 2;
+
+            struct argument *left_args = buildArgs(left, mid, level + 1);
+            struct argument *right_args = buildArgs(mid + 1, right, level + 1);
+
+            pthread_t left_thread;
+            pthread_t right_thread;
+
+            pthread_create(&left_thread, NULL, parallel_mergesort,
+                           (void *)left_args);
+            pthread_create(&right_thread, NULL, parallel_mergesort,
+                           (void *)right_args);
+
+            pthread_join(left_thread, NULL);
+            pthread_join(right_thread, NULL);
+
+            merge(left, mid, mid + 1, right);
+        } else {
+            // we have created enough threads already
+            my_mergesort(left, right);
+        }
+    }
+    return NULL;
 }
 
 /* we build the argument for the parallel_mergesort function. */

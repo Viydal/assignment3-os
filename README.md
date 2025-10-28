@@ -7,27 +7,33 @@ README.template
 
 ## Overview
 
-Concisely explain what the program does. If this exceeds a couple of
-sentences, you're going too far. Generally, you should be pulling this
-right from the project specification. We don't want you to just cut and
-paste, but paraphrase what is stated in the project specification.
+This program implements parallel merge sort using the pthread library. 
+It extends the original merge sort algorithm by creating multiple threads to sort subarrays in parallel, 
+allowing faster sorting on multi-core systems. 
 
 ## Manifest
 
-A listing of source files and other non-generated files, and a brief
-(one-line) explanation of the purpose of each file.
+mergesort.c – Has the functions to implement serial and parallel merge sort, including merge(), my_mergesort(), parallel_mergesort(), and buildArgs().
+mergesort.h – Header file defining global variables, functions, and the struct argument used for thread arguments.
+test-mergesort.c – Testing program that generates a random array and measures sorting performance.
 
 ## Building the project
 
-This section should tell the user how to build your code.  If you are
-delivering a library, where does it need to be installed, or how do you use
-it? Is this an executable, if so, how can a user get up to speed as fast as
-possible?
+1. You must have a C compiler with pthread support
+2. From the project folder, run: make (This will compile the code and produce the executable file "test-mergesort")
 
 ## Features and usage
 
-Summarise the main features of your program. It is also appropriate to
-instruct the user how to use your program.
+- Single-threaded merge sort: When the cutoff is set to 0, the program uses standard recursive merge sort.
+- Parallel merge sort: When the cutoff is greater than 0, the program creates threads up to the specified level to sort subarrays concurrently.
+
+To run the executeable use the format below:
+./test-mergesort <input size> <cutoff level> <seed>
+
+Input Parameters 
+- input size – number of elements in the array
+- cutoff level – maximum recursion level to create threads
+- seed – random seed for array generation
 
 ## Testing
 

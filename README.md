@@ -1,4 +1,4 @@
-## Project Number/Title 
+## Project: Parallel Merge Sort, Assignment 3, Group 89 
 
 * Authors: Rory Long, Riley Turner, Michelle Nguyen
 * Group name: UG_Group89
@@ -73,7 +73,7 @@ Within the **first graph**, a clear correlation can be identified between cutoff
 
 - **_Cutoff 0 - 4_**: From cutoff 0 - 4 the execution time of the program decreases logarithmically as the parallel threads distribute the workload. The execution speed begins to plateau at a cutoff level of approximately 4.  
 
-- **_Cutoff 4 - 11_**: From cutoff 4 - 11 the execution time of the program remains incredibly stagnant as the additional threads provide no significant improvement to the execution speed of the program.
+- **_Cutoff 4 - 11_**: From cutoff 4 - 11 the execution time of the program remains incredibly stagnant as the additional threads provide no significant improvement to the execution speed of the program. The number of threads is no longer the bottleneck of the process.
 
 - **_Cutoff 11 - 14_**: From cutoff 11 - 14 the execution time of the program begins to increase steadily due to thread management overhead. With excessive threads relative to the number of available CPU cores, the overhead from context switching and thread coordination becomes a detriment to the programs speed, nullifying any benefit from the parallelism.
 
@@ -91,24 +91,29 @@ Within the **second graph**, a clear correlation can be identified between the s
     * With a cutoff of 15, at peak the process requires `2^(cutoff+1) - 1`=`2^16-1`= 65535 threads
     * The program tries to run thousands of threads on a CPU with only a handful of cores.
     * "Oversubscription": 
-        * We may have too many open threas than CPU cores. On this machine, we have 60k threads on 8 scores. The OS will schedule the run so that each thread will get a tiny amount of time, then become prempted, releasing the core to be used by other thread.
+        * We may have too many open threads than CPU cores. On this machine, we have 60k threads on 8 scores. The OS will schedule the run so that each thread will get a tiny amount of time, then preempt it so the core can be used by other thread.
         * The OS constanlty saves and restores state, so there is a lot of context-switching overhead. This is also the reason why after a small cutoff, the runtime stops improving and then gets worse. 
         * The OS scheduler has to strugle managing a lot of equal-priority runable threads. Every thread runs a bit, but progress per thread is tiny, and thus the whole process just runs much more slowly.
+    * Question for thought: Is the root cause "oversubscription" or "thread/resource starvation"?
+        * Starvation means some threads never get CPU time; where as in oversubscription, every thread gets some CPU time but not sufficient to make any progress
+        * One reason that leans towards oversubscription is that macOS, Windows use preemptive, round-robin politices for *equal-priority* threads. Our threads are at the same priority, and thus each runnable thread is given the same time. Because of too many threads, this time is exceedingly small.
     * Note: 
         * on Windows/Linux, the program does not return an error, it just runs for too long. 
         * However, on one of our group's MacOS machine of 8GB RAM, the program `./test-mergesort` only run successfully until cutoff value =11. 
         * Above 12, the `./test-mergesort` returns an error due to the array not being accurately sorted. 
         * The image below shows attempts at diagnosing this bug, by printing out the element that was not in the correct order:
         ![Failed attempts on Mac 8GB RAM](comp2002-os-mergesort/test/bugs_mac_programcrash.png)
-        * With a cutoff of 15, at peak the process requires `2^(cutoff+1) - 1`=`2^16-1`= an astronomical number. On MacOS, this failure of pthread creation (due to too many new threads created) seems to be earlier than other machines. Every new thread gets its own stack reserved in virtual memory, and having `2^16-1` threads means that the process reserves much more than the allowed limit of macOS (at least for our 8GB RAM machine) . macOS seems to be much more conservative with the per-user thread limit. 
+        * On MacOS, this failure of pthread creation (due to too many new threads created) seems to be earlier than other machines. Every new thread gets its own stack reserved in virtual memory, and having `2^16-1` threads means that the process reserves much more than the allowed limit of macOS (at least for our 8GB RAM machine) . macOS seems to be much more conservative with the per-user thread limit. 
 
-2. **Too large `cutoff` value**: 
-    * When size reaches = 1,000,000,000 (1 billion), the program runs for very long. 
-        * On the Mac 8GB machine: `./test-mergesort 1000000000 6 23`gives the output "Sorting 1000000000 elements took 106.77238 seconds." Even with 6 concurrent threads, the runtime is still more than 1 minute, which is significant larger than the average of less than 2 seconds at 6 concurrent threads in previous test cases.
-        * For an array of `int` (4 bytes per `int` element), and size = 1,000,000,000 (1 billion), memory just for `A` and `B` arrays is about 8 GB. On an 8 GB Mac this triggers heavy paging (ie. the process of moving data between RAM and storage is very expensive), and thus the long runtime.
-    * When size reaches >= 10,000,000,000 (10 billion) and with a test case of cutoff = 6, the program returns a *bus error* (for Mac 8GB RAM machine). With other smaller cutoff like 0 and 1, the program with size >= 10,000,000,000 (10 billion) runs forever.
-        * For size ≥ 10,000,000,000 (10 billion), A+B would need `2*4*10 billion` bytes. This might be much more than the what the virtual memory allocation of a 8GB machine can handle. `malloc` may fail and return an invalid address. The code does not check for invalid address, and thus when we access this invalid address, there is a bus error. (which is a fault raised when the program accesses memory that CPU cannot handle, such as an invalid address)
-        * At the time of testing, the input is far beyond the test machine’s memory or compute capacity.
+2. **Too large `size` value**: 
+    * Run for too long: When size reaches = 1,000,000,000 (1 billion), the program runs for very long, until "forever". 
+        * On the Mac 8GB machine: `./test-mergesort 1000000000 6 23`gives the output "Sorting 1000000000 elements took 106.77238 seconds." This is significant larger than the average of less than 2 seconds at 6 concurrent threads in previous test cases.
+        * For an array of `int` (4 bytes per `int` element), and size = 1,000,000,000 (1 billion), memory just for `A` and `B` arrays is about 8 GB. This is the size of RAM on the test machine (macOS).
+        * On an 8 GB Mac, this runs out of RAM. The OS now swaps pages back and forth from RAM and disk -> Heavy paging and thus the long runtime.(Thrashing now may occur when the system now spends more time on page swapping than actual processing.)
+    * Bus error: When size reaches >= 10,000,000,000 (10 billion) and with a test case of cutoff = 6, the program returns a *bus error* (for Mac M1 8GB RAM machine). 
+        * For size ≥ 10,000,000,000 (10 billion), A+B would need `2*4*10 billion` bytes. This might be much more than the what the virtual memory limit that a 8GB machine can handle. 
+        * `malloc` may fail and return an invalid address. The code does not check for invalid address, and thus when we access this invalid address, there is a bus error. (which is a fault raised when the program accesses memory that CPU cannot handle, such as an invalid address). There is memory overflow.
+        * At the time of testing, the input is far beyond the test machine’s memory/compute capacity.
     ![Failed attempts on Mac 8GB RAM](comp2002-os-mergesort/test/bus_error.png)
 
 ## Reflection and Self Assessment

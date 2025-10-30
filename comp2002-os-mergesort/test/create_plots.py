@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 from pathlib import Path
 from datetime import datetime
 import os
@@ -13,8 +14,8 @@ RESULTS_DIR = TEST_DIR / "results"
 
 # Choose control column and value:
 #CONTROL must be one of: "size", "cutoff", "seed"
-CONTROL = "size" #"size"
-CONTROL_VALUE = 100000000  #change this to a value that exists in the chosen CONTROL column
+CONTROL = "seed" #"size" #"size"
+CONTROL_VALUE = 1 #100000000  #change this to a value that exists in the chosen CONTROL column
 
 # -----------------------------
 # Load your desired CSV or use the latest CSV
@@ -92,11 +93,17 @@ ax.set_ylabel("time_seconds")
 
 # Title
 # Create a title with description of y-axis, x-axis, labels, and control
-TITLE=f"Merge Sort Benchmark Scatter Plot\nX-axis: {x_col}, Y-axis: time_seconds, grouped by label: {group_col}\nFiltered where Control {CONTROL}={CONTROL_VALUE}"
+# However, in the title, reformat the CONTROL_VALUE to be commas for thousands
+CONTROL_VALUE_FMT = f"{CONTROL_VALUE:,}"
+TITLE=f"Merge Sort Benchmark Scatter Plot\nX-axis: {x_col}, Y-axis: time_seconds, grouped by label: {group_col}\nFiltered where Control {CONTROL}={CONTROL_VALUE_FMT}"
 ax.set_title(TITLE, pad=15)
 
 # Legend
-ax.legend(title=group_col, fontsize=8)
+# if group_col is "size", we can format group_col with commas using the same as f"{CONTROL_VALUE:,}"
+if group_col == "size":
+    ax.legend(title=group_col, fontsize=8, labels=[f"{int(x):,}" for x in df_filt[group_col].unique()])
+else:
+    ax.legend(title=group_col, fontsize=8)
 
 # Tight layout and save PNG
 OUT_PNG = FILEPATH.with_name(f"{FILEPATH.stem}_{CONTROL}_{CONTROL_VALUE}_scatter.png")

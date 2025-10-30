@@ -1,4 +1,4 @@
-#include <error.h> /* On MacOS you won't need this line */
+//#include <error.h> /* On MacOS you won't need this line */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

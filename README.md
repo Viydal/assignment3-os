@@ -44,7 +44,7 @@ Input Parameters
 - When the `cutoff` is set to 0, the program uses standard recursive merge sort. The output shows the runtime of **single-threaded merge sort**.
 
 - When the `cutoff` is greater than 0, the program creates threads up to the specified level (derived from `cutoff`) to sort subarrays concurrently. The output shows the runtime of **parallel merge sort**.
-    > Note: the number of threads is `2**cutoff` in this case.
+> Note: the number of threads is `2^cutoff` in this case.
 
 ## Testing
 
@@ -77,12 +77,41 @@ Our dependencies in requirements.txt include
 
 ## Reflection and Self Assessment
 
-Discuss the issues you encountered during development and testing. What
-problems did you have? What did you have to research and learn on your own?
-What kinds of errors did you get? How did you fix them?
+**Discuss the issues you encountered during development and testing**
 
-What parts of the project did you find challenging? Is there anything that
-finally "clicked" for you in the process of working on this project? How well did the development and testing process go for you?
+_Development_:
+
+- When the group initially began to construct a solution for this project, there was some confusion in relation to the usage of the `args` struct and its components. It wasn't immediately clear as to what the left and right pointers represented, but with some further research and testing this confusion quickly subsided.
+- While developing the `merge` function, the group found that some iterators did not appropriately take into account their position relative to the end of the array. This caused several out-of-bounds errors that were quickly addressed.
+
+_Testing_:
+
+- The testing process initially lacked automation, requiring multiple manual executions for performance and correctness checks. To address this, a testing script was developed to streamline the process by automatically executing numerous variations of the main program, collating timing data, generating visualisations, and ensuring proper functionality in the most extreme cases.
+
+**What problems did you have?**
+
+- The group did not face any major issues throughout the course of this project, with the only minor issue being that of availability. Attempting to schedule a time for the group to communicate ideas and clarify expectations was the only real difficulty.
+
+**What did you have to research and learn on your own?**
+
+- Although the topic of merge sort is familiar, the group felt it necessary to do some minor revision on the core concepts and logic.
+- The group needed to do some research in relation to the usage of threads to ensure the `parallel merge sort` function ran as anticipated.
+
+**What kinds of errors did you get? How did you fix them?**
+
+- The group ran into one minor issue in the development of the codebase, with that being in how some iterators did not appropriately take into account their position relative to the end of the array. To identify and fix this issue, a visualisation of the programming logic was produced and execution flow was tracked.
+
+**What parts of the project did you find challenging?**
+
+- Producing a testing script to more efficiently orchestrate testing was the most challenging aspect of this project. This was difficult because the script was required to be produced in such a way that it could execute many different variations of the main executable, collating the results and producing the relevant visualistion material.
+
+**Is there anything that finally "clicked" for you in the process of working on this project?**
+
+- Everything in this project functioned exactly as the group expected, there were no **eureka** moments unfortunately. One group member did express their satisfaction at the realisation a testing script could be produced to automate testing, this was the closest the group came to having a **eureka** moment.
+
+**How well did the development and testing process go for you?**
+
+- The developmental process was extremely efficient, with the entire programming portion of the project requiring the better part of an hour. The testing process was similarly expeditious, with testing requiring approximately two hours of dedicated efforts.
 
 ## Sources Used
 

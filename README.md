@@ -1,5 +1,3 @@
-README.template
-
 ## Project Number/Title 
 
 * Authors: Rory Long, Riley Turner, Michelle Nguyen
@@ -48,13 +46,31 @@ Input Parameters
 
 ## Testing
 
-This section should detail how you tested your code. Simply stating "I ran
-it a few times and it seems to work" is not sufficient. Your testing needs
-to be detailed here.
+### Running our test `.py` code
+1. Make sure you are in our project folder `./comp2002-os-mergesort`
+2. Create a new environment if you have not done so: `python -m venv ./test/.venv`
+3. Activate `source ./test/.venv/bin/activate` (for MacOS/Linux)
+4. Use our requirements.txt to install dependencies: `pip install -r ./test/requirements.txt`
+Our dependencies in requirements.txt include
+* Pandas
+* Matplotlib
+5. (1) Run our first script to generate a csv, summarising the results of all runs: 
+ `python ./test/create_test_csv.py`
+    * Go to this script to adjust the inputs you want to run in the batch: inputs, cutoffs and seeds.
+    * Output is a csv file with the name "results_{datetime}.csv" in the ./test/results folder.
+6. (2.1) To see the table png of the result, run `python ./test/create_table.py`. This will run the latest created csv file. You can also change the csv file directly in this file.
+7. (2.2) To see the scatter plot of the result, run `python ./test/create_plots.py`. 
+* This will run the latest created csv file. 
+* To select the control, edit this script.
+
+### Record of our past testing results and discussion
+
+[Placeholder] Attach the images, tables with meaningful results here
+[Discussion] Discuss the key insights from these results
 
 ## Known Bugs
 
-List known bugs that you weren't able to fix (or ran out of time to fix).
+[Placeholder] List known bugs that you weren't able to fix (or ran out of time to fix).
 * Too many threads -> program crashes???
 
 ## Reflection and Self Assessment

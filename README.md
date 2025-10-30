@@ -7,33 +7,44 @@ README.template
 
 ## Overview
 
-This program implements parallel merge sort using the pthread library. 
+This program implements parallel merge sort using the `pthread` library. 
 It extends the original merge sort algorithm by creating multiple threads to sort subarrays in parallel, 
 allowing faster sorting on multi-core systems. 
 
 ## Manifest
 
-mergesort.c – Has the functions to implement serial and parallel merge sort, including merge(), my_mergesort(), parallel_mergesort(), and buildArgs().
-mergesort.h – Header file defining global variables, functions, and the struct argument used for thread arguments.
-test-mergesort.c – Testing program that generates a random array and measures sorting performance.
+* `mergesort.c` - Has the functions to implement serial and parallel merge sort, including merge(), my_mergesort(), parallel_mergesort(), and buildArgs().
+
+* `mergesort.h` – Header file defining global variables, functions, and the struct argument used for thread arguments.
+
+* `test-mergesort.c` – Testing program that generates a random array and measures sorting performance.
 
 ## Building the project
 
-1. You must have a C compiler with pthread support
-2. From the project folder, run: make (This will compile the code and produce the executable file "test-mergesort")
+### Required libraries/ software
+1. `pthread` library
+2. `gcc/clang` C compiler
+
+### Building the project 
+1. From the project folder `./comp2002-os-mergesort`, run: `make`. This will compile the code and produce the executable file `test-mergesort`.
+2. Run the test: `./test-mergesort <input size> <cutoff level> <seed>`. Details on the input parameters are found in the [next section](#features-and-usage)
 
 ## Features and usage
 
-- Single-threaded merge sort: When the cutoff is set to 0, the program uses standard recursive merge sort.
-- Parallel merge sort: When the cutoff is greater than 0, the program creates threads up to the specified level to sort subarrays concurrently.
-
+### Program usage
 To run the executeable use the format below:
-./test-mergesort <input size> <cutoff level> <seed>
+`./test-mergesort <input size> <cutoff level> <seed>`
 
 Input Parameters 
-- input size – number of elements in the array
-- cutoff level – maximum recursion level to create threads
-- seed – random seed for array generation
+- `input size` – number of elements in the array
+- `cutoff level` – maximum recursion level to create threads
+- `seed` – seed for random array generation
+
+### Summary of program main features
+- When the `cutoff` is set to 0, the program uses standard recursive merge sort. The output shows the runtime of **single-threaded merge sort**.
+
+- When the `cutoff` is greater than 0, the program creates threads up to the specified level (derived from `cutoff`) to sort subarrays concurrently. The output shows the runtime of **parallel merge sort**.
+    > Note: the number of threads is `2**cutoff` in this case.
 
 ## Testing
 
@@ -44,6 +55,7 @@ to be detailed here.
 ## Known Bugs
 
 List known bugs that you weren't able to fix (or ran out of time to fix).
+* Too many threads -> program crashes???
 
 ## Reflection and Self Assessment
 
@@ -52,8 +64,7 @@ problems did you have? What did you have to research and learn on your own?
 What kinds of errors did you get? How did you fix them?
 
 What parts of the project did you find challenging? Is there anything that
-finally "clicked" for you in the process of working on this project? How well
-did the development and testing process go for you?
+finally "clicked" for you in the process of working on this project? How well did the development and testing process go for you?
 
 ## Sources Used
 

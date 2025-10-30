@@ -1,25 +1,12 @@
-# Compiler (cc is clang on macOS, gcc/clang elsewhere)
-CC := cc
+CC = gcc
+CFLAGS = -Wall -Wpointer-arith -Wstrict-prototypes -std=gnu89 -fPIC -MMD -MP -lpthread
 
-# Compile flags (no libraries here)
-CFLAGS := -Wall -Wpointer-arith -Wstrict-prototypes -std=gnu89 -fPIC -MMD -MP
+all: test-mergesort
 
-# Linker libs/flags (put pthread here)
-LDLIBS := -pthread
-
-BIN  := test-mergesort
-OBJS := test-mergesort.o mergesort.o
-
-all: $(BIN)
-
-$(BIN): $(OBJS)
-	$(CC) -o $@ $^ $(LDLIBS)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+#This builds an executable 
+test-mergesort: test-mergesort.o mergesort.o
+	$(CC) $(CFLAGS) -o $@ $?
 
 .PHONY: clean
 clean:
-	/bin/rm -f $(BIN) $(OBJS) *.d
-
--include $(OBJS:.o=.d)
+	/bin/rm -f *.o *.d test-mergesort

@@ -82,7 +82,9 @@ Within the **first graph**, a clear correlation can be identified between cutoff
 
 Within the **second graph**, a clear correlation can be identified between the size of the input array and the execution speed of the program.
 
-With an input array of size 100 000 000, the program initially requires an additional 10 seconds to execute when compared to the input array of size 10 000 000. This can be attributed to the lack of threading occurring within the program, and as the cutoff level increase so too does the efficiency of the program in both array sizes. Once a cutoff level of 4 is achieved and the program begins to fully utilise the CPU cores without overusing them, both array sizes receive maximum benefit from the implemented parallelism. Both array sizes become compute-bound and scale as cutoff increases, with the rate of improvement remaining constant.
+- With an input array of size 100 000 000, the program initially requires an additional 10 seconds to execute when compared to the input array of size 10 000 000. This can be attributed to the lack of threading occurring within the program, and as the cutoff level increase so too does the efficiency of the program in both array sizes. 
+
+- Once a cutoff level of 4 is achieved and the program begins to fully utilise the CPU cores without overusing them, both array sizes receive maximum benefit from the implemented parallelism. Both array sizes become compute-bound and scale as cutoff increases, with the rate of improvement remaining constant.
 
 ## Known Bugs
 

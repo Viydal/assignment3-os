@@ -42,14 +42,13 @@ Input Parameters
 - When the `cutoff` is set to 0, the program uses standard recursive merge sort. The output shows the runtime of **single-threaded merge sort**.
 
 - When the `cutoff` is greater than 0, the program creates threads up to the specified level (derived from `cutoff`) to sort subarrays concurrently. The output shows the runtime of **parallel merge sort**.
-> Note: the number of threads is `2^cutoff` in this case.
 
 ## Testing
 
 ### Running our test `.py` code
 1. Make sure you are in our project folder `./comp2002-os-mergesort`
 2. Create a new environment if you have not done so: `python -m venv ./test/.venv`
-3. Activate `source ./test/.venv/bin/activate` (for MacOS/Linux)
+3. Activate `source ./test/.venv/bin/activate` (for MacOS/Linux) or `.\test\.venv\Scripts\activate` (Windows)
 4. Use our requirements.txt to install dependencies: `pip install -r ./test/requirements.txt`
 Our dependencies in requirements.txt include
 * Pandas
@@ -88,8 +87,29 @@ Within the **second graph**, a clear correlation can be identified between the s
 
 ## Known Bugs
 
-[Placeholder] List known bugs that you weren't able to fix (or ran out of time to fix).
-* Too many threads -> program crashes???
+1. **Too large `cutoff` value**: When size = 100,000,000 and the cutoff value >=15, our program runs forever (not completed until after 10+ minutes and is forcibly shut down). 
+    * With a cutoff of 15, at peak the process requires `2^(cutoff+1) - 1`=`2^16-1`= 65535 threads
+    * The program tries to run thousands of threads on a CPU with only a handful of cores.
+    * "Oversubscription": 
+        * We may have too many open threas than CPU cores. On this machine, we have 60k threads on 8 scores. The OS will schedule the run so that each thread will get a tiny amount of time, then become prempted, releasing the core to be used by other thread.
+        * The OS constanlty saves and restores state, so there is a lot of context-switching overhead. This is also the reason why after a small cutoff, the runtime stops improving and then gets worse. 
+        * The OS scheduler has to strugle managing a lot of equal-priority runable threads. Every thread runs a bit, but progress per thread is tiny, and thus the whole process just runs much more slowly.
+    * Note: 
+        * on Windows/Linux, the program does not return an error, it just runs for too long. 
+        * However, on one of our group's MacOS machine of 8GB RAM, the program `./test-mergesort` only run successfully until cutoff value =11. 
+        * Above 12, the `./test-mergesort` returns an error due to the array not being accurately sorted. 
+        * The image below shows attempts at diagnosing this bug, by printing out the element that was not in the correct order:
+        ![Failed attempts on Mac 8GB RAM](comp2002-os-mergesort/test/bugs_mac_programcrash.png)
+        * With a cutoff of 15, at peak the process requires `2^(cutoff+1) - 1`=`2^16-1`= an astronomical number. On MacOS, this failure of pthread creation (due to too many new threads created) seems to be earlier than other machines. Every new thread gets its own stack reserved in virtual memory, and having `2^16-1` threads means that the process reserves much more than the allowed limit of macOS (at least for our 8GB RAM machine) . macOS seems to be much more conservative with the per-user thread limit. 
+
+2. **Too large `cutoff` value**: 
+    * When size reaches = 1,000,000,000 (1 billion), the program runs for very long. 
+        * On the Mac 8GB machine: `./test-mergesort 1000000000 6 23`gives the output "Sorting 1000000000 elements took 106.77238 seconds." Even with 6 concurrent threads, the runtime is still more than 1 minute, which is significant larger than the average of less than 2 seconds at 6 concurrent threads in previous test cases.
+        * For an array of `int` (4 bytes per `int` element), and size = 1,000,000,000 (1 billion), memory just for `A` and `B` arrays is about 8 GB. On an 8 GB Mac this triggers heavy paging (ie. the process of moving data between RAM and storage is very expensive), and thus the long runtime.
+    * When size reaches >= 10,000,000,000 (10 billion) and with a test case of cutoff = 6, the program returns a *bus error* (for Mac 8GB RAM machine). With other smaller cutoff like 0 and 1, the program with size >= 10,000,000,000 (10 billion) runs forever.
+        * For size ≥ 10,000,000,000 (10 billion), A+B would need `2*4*10 billion` bytes. This might be much more than the what the virtual memory allocation of a 8GB machine can handle. `malloc` may fail and return an invalid address. The code does not check for invalid address, and thus when we access this invalid address, there is a bus error. (which is a fault raised when the program accesses memory that CPU cannot handle, such as an invalid address)
+        * At the time of testing, the input is far beyond the test machine’s memory or compute capacity.
+    ![Failed attempts on Mac 8GB RAM](comp2002-os-mergesort/test/bus_error.png)
 
 ## Reflection and Self Assessment
 
@@ -131,7 +151,15 @@ _Testing_:
 
 ## Sources Used
 
-If you used any sources outside of the textbook, you should list them here. 
-If you looked something up on stackoverflow.com or you use help from AI, and 
-fail to cite it in this section, it will be considered plagiarism and dealt 
-with accordingly. So be safe CITE!
+1. Bus error: https://stackoverflow.com/questions/212466/what-is-a-bus-error-is-it-different-from-a-segmentation-fault
+2. Parallel Merge sort: https://stanford.edu/~rezab/classes/cme323/S16/notes/Lecture04/cme323_lec4.pdf
+3. Oversubscription: https://stackoverflow.com/questions/55544970/using-more-software-threads-than-cpus-oversubscribing
+4. Oversubscription: https://dl.acm.org/doi/10.1145/3431379.3460641#:~:text=Traditional%20applications%20need%20to%20be,CPU%20elasticity%20in%20the%20cloud.
+
+### For testing - Python script
+1. Subprocess documentation: https://docs.python.org/3/library/subprocess.html
+2. Python regex: https://www.w3schools.com/python/python_regex.asp
+3. Create table from dataframe: https://stackoverflow.com/questions/26678467/export-a-pandas-dataframe-as-a-table-image
+4. Some matplotlib references:
+*  https://www.geeksforgeeks.org/python/plot-multiple-plots-in-matplotlib/
+*  https://stackoverflow.com/questions/71968225/how-to-create-two-scatter-plots-in-subplots

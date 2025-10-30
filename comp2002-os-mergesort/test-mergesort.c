@@ -94,7 +94,6 @@ int check_if_sorted(int A[], int n) {
     int i;
     for (i = 0; i < n - 1; i++) {
         if (A[i] > A[i + 1]) {
-            printf("Array is not sorted: A[%d] = %d > A[%d] = %d\n", i, A[i], i + 1, A[i + 1]);
             return FALSE;
         }
     }
@@ -157,9 +156,6 @@ int main(int argc, char **argv) {
     parallel_mergesort(arg);
 	// my_mergesort(arg->left, arg->right);
     sorting_time = getMilliSeconds() - start_time;
-
-    //print the sorting time
-    printf("Before checking if sorted or not: Sorting %d elements took %4.5lf seconds.\n", n, sorting_time / 1000.0);
 
     // print the array, for debugging purpose.
     // printA();

@@ -9,6 +9,7 @@
 
 /* this function will be called by mergesort() and also by parallel_mergesort(). */
 void merge(int leftstart, int leftend, int rightstart, int rightend) {
+    // Create relevant iterators to track what to compare
     int l = leftstart;
     int r = rightstart;
     int index = leftstart;
@@ -44,16 +45,18 @@ void merge(int leftstart, int leftend, int rightstart, int rightend) {
 
 /* this function will be called by parallel_mergesort() as its base case. */
 void my_mergesort(int left, int right){
-		if(left<right){
-			int mid=(left+right)/2;
+    // If there is at least two elements, continue splitting
+	if (left < right){
+        int mid = (left + right) / 2;
 
-            // Recursively sort left and right halves
-			my_mergesort(left,mid);
-			my_mergesort(mid+1,right);
+        // Recursively sort left and right halves
+        my_mergesort(left, mid);
+        my_mergesort(mid + 1, right);
 
-            // Merge the sorted halves
-			merge(left,mid,mid+1,right);
-		}
+        // Merge the sorted halves
+        merge(left, mid, mid + 1, right);
+    }
+    // If there is one element, stop splitting
 	return;
 }
 
@@ -64,29 +67,30 @@ void * parallel_mergesort(void *arg){
     int right = args->right;
     int level = args->level;
 
+    // If there is at least two elements, continue splitting
     if (left < right) {
         // check if we can create more threads
         if (level < cutoff) {
             int mid = (left + right) / 2;
 
-            // build arguments for left and right subarrays
+            // Build arguments for left and right subarrays
             struct argument *left_args = buildArgs(left, mid, level + 1);
             struct argument *right_args = buildArgs(mid + 1, right, level + 1);
 
             pthread_t left_thread;
             pthread_t right_thread;
 
-            // create threads for left and right subarrays so they can be sorted in parallel
+            // Create threads for left and right subarrays so they can be sorted in parallel
             pthread_create(&left_thread, NULL, parallel_mergesort,
                            (void *)left_args);
             pthread_create(&right_thread, NULL, parallel_mergesort,
                            (void *)right_args);
 
-            // wait for both threads to finish
+            // Wait for both threads to finish running
             pthread_join(left_thread, NULL);
             pthread_join(right_thread, NULL);
 
-            // merge the sorted subarrays
+            // Merge the sorted subarrays
             merge(left, mid, mid + 1, right);
         } else {
             // max number of threads reached, use regular mergesort

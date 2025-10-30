@@ -1,3 +1,6 @@
 mergesort.*
 test-mergesort.*
 test-mergesort
+test/.venv/*
+test/results/*
+!.gitkeep

@@ -1,5 +1,3 @@
-README.template
-
 ## Project Number/Title 
 
 * Authors: Rory Long, Riley Turner, Michelle Nguyen

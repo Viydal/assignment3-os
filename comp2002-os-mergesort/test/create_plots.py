@@ -13,8 +13,8 @@ RESULTS_DIR = TEST_DIR / "results"
 
 # Choose control column and value:
 #CONTROL must be one of: "size", "cutoff", "seed"
-CONTROL = "seed" #"size"
-CONTROL_VALUE = 78  #change this to a value that exists in the chosen CONTROL column
+CONTROL = "size" #"size"
+CONTROL_VALUE = 100000000  #change this to a value that exists in the chosen CONTROL column
 
 # -----------------------------
 # Load your desired CSV or use the latest CSV

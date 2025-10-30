@@ -13,9 +13,9 @@ import pandas as pd
 # -----------------------------
 # USER-CONFIGURABLE PARAMETERS
 # -----------------------------
-SIZE_LIST = [pow(10,4),pow(10,5)] #TODO: cannot do more than 1 billion???? too long
-CUTOFF_LIST = [0, 1, 2,3,4,5,6,7,8,9,10] #TODO: cannot do 20
-RAND_SEED_LIST = [43, 56, 78] 
+SIZE_LIST = [pow(10,7), pow(10,8)] #TODO: cannot do more than 1 billion???? too long
+CUTOFF_LIST = [0, 1, 2,3,4,5,6,7,8,9,10, 11, 12, 13, 14] #TODO: cannot do 20
+RAND_SEED_LIST = [1, 2, 3] 
 
 EXECUTABLE = "./test-mergesort"
 
@@ -47,7 +47,7 @@ for size, cutoff, seed in itertools.product(SIZE_LIST, CUTOFF_LIST, RAND_SEED_LI
     result = subprocess.run([EXECUTABLE, str(size), str(cutoff), str(seed)],
                             capture_output=True, text=True)
     output = result.stdout.strip()
-    print(f"Done, output is collected.")
+    print(f"\nDone, output is collected.")
     # If output is empty, raise an error
     if not output:
         raise ValueError(f"Error: No output from executable. Stderr:\n{result.stderr}")

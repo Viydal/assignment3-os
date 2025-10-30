@@ -65,8 +65,24 @@ Our dependencies in requirements.txt include
 
 ### Record of our past testing results and discussion
 
-[Placeholder] Attach the images, tables with meaningful results here
-[Discussion] Discuss the key insights from these results
+![Scatter plot (Seeds)](comp2002-os-mergesort/test/results/results_20251030_194457_size_100000000_scatter.png)
+![Scatter plot (Size)](comp2002-os-mergesort/test/results/results_20251030_194457_seed_1_scatter.png)
+
+**Graph 1:** 
+
+Within the **first graph**, a clear correlation can be identified between cutoff quantity and the execution speed of the program.
+
+- **_Cutoff 0 - 4_**: From cutoff 0 - 4 the execution time of the program decreases logarithmically as the parallel threads distribute the workload. The execution speed begins to plateau at a cutoff level of approximately 4.  
+
+- **_Cutoff 4 - 11_**: From cutoff 4 - 11 the execution time of the program remains incredibly stagnant as the additional threads provide no significant improvement to the execution speed of the program.
+
+- **_Cutoff 11 - 14_**: From cutoff 11 - 14 the execution time of the program begins to increase steadily due to thread management overhead. With excessive threads relative to the number of available CPU cores, the overhead from context switching and thread coordination becomes a detriment to the programs speed, nullifying any benefit from the parallelism.
+
+**Graph 2:** 
+
+Within the **second graph**, a clear correlation can be identified between the size of the input array and the execution speed of the program.
+
+With an input array of size 100 000 000, the program initially requires an additional 10 seconds to execute when compared to the input array of size 10 000 000. This can be attributed to the lack of threading occurring within the program, and as the cutoff level increase so too does the efficiency of the program in both array sizes. Once a cutoff level of 4 is achieved and the program begins to fully utilise the CPU cores without overusing them, both array sizes receive maximum benefit from the implemented parallelism. Both array sizes become compute-bound and scale as cutoff increases, with the rate of improvement remaining constant.
 
 ## Known Bugs
 

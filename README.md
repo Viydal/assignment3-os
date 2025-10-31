@@ -62,6 +62,8 @@ Our dependencies in requirements.txt include
 * This will run the latest created csv file. 
 * To select the control, edit this script.
 
+> Note: in `test-mergesort.c`, we change `%4.2` to `%4.5` in the sentence `"Sorting %d elements took %4.5lf seconds.\n"`, to print more decimal values for our test plots.
+
 ### Record of our past testing results and discussion
 
 ![Scatter plot (Seeds)](comp2002-os-mergesort/test/results/results_20251030_194457_size_100000000_scatter.png)

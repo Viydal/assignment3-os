@@ -170,3 +170,10 @@ _Testing_:
 4. Some matplotlib references:
 *  https://www.geeksforgeeks.org/python/plot-multiple-plots-in-matplotlib/
 *  https://stackoverflow.com/questions/71968225/how-to-create-two-scatter-plots-in-subplots
+5. AI Citation:
+* The testing python scripts were not genereated by AI, but ChatGPT was used to provide answers and references to add some features to the plots.
+List of such features are:
+* List a set of HEX colours for the plot palette
+* How to segment the numbers shown in 1,000,000 in the most efficient way
+* How to scale y-axis together with padding in the most efficient way
+* Table: how to adjust the title of the table to be further away from the table and crop the output image to tightly wrap the table.

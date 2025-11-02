@@ -10,7 +10,7 @@ RESULTS_DIR = TEST_DIR / "results"
 
 # Input the name of the csv to load here
 # FILEPATH = RESULTS_DIR / "results_20251030_155057.csv"
-# Or you can load the latest results CSV based on creation time
+# Or load the latest results CSV based on creation time
 FILEPATH = max(RESULTS_DIR.glob("results_*.csv"), key=os.path.getctime) # get the most recently created file
 
 #-----------------------------

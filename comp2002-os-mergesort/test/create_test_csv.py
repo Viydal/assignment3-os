@@ -1,7 +1,3 @@
-"""
-Instructions on installing dependencies
-1. pip install pandas
-"""
 import os
 import re
 import itertools

@@ -18,7 +18,7 @@ CONTROL = "seed" #"size" #"size"
 CONTROL_VALUE = 1 #100000000  #change this to a value that exists in the chosen CONTROL column
 
 # -----------------------------
-# Load your desired CSV or use the latest CSV
+# Load the desired CSV or use the latest CSV
 # -----------------------------
 FILEPATH = max(RESULTS_DIR.glob("results_*.csv"), key=os.path.getctime)  # most recently created file
 # or: # FILEPATH = RESULTS_DIR / "results_20251030_155057.csv"
